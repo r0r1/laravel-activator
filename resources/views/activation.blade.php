@@ -1,0 +1,1 @@
+activation.blade.php

@@ -1,0 +1,1 @@
+activation_expired.blade.php

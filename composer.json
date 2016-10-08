@@ -1,0 +1,39 @@
+{
+    "name": "rorikurniadi/laravel-activator",
+    "description": "Laravel activator provides activation & resend activation account",
+    "keywords": ["laravel", "user activation", "activation"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rori Kurniadi",
+            "email": "rori.kurniadi@yahoo.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6.4",
+        "illuminate/auth": "~5.3",
+        "illuminate/console": "~5.3",
+        "illuminate/container": "~5.3",
+        "illuminate/contracts": "~5.3",
+        "illuminate/database": "~5.3",
+        "illuminate/encryption": "~5.3",
+        "illuminate/http": "~5.3",
+        "illuminate/support": "~5.3"
+    },
+    "require-dev": {
+        "mockery/mockery": "~0.9",
+        "phpunit/phpunit": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rorikurn\\Activator\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "prefer-stable": true
+}

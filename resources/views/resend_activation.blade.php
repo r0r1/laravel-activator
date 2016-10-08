@@ -1,0 +1,1 @@
+resend_activation.blade.php
