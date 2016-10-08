@@ -31,6 +31,7 @@ class ActivatorServiceProvider extends ServiceProvider
         $this->registerServiceProviders();
         $this->registerAliases();
         $this->registerConfig();
+        $this->registerMigrations();
     }
 
     /**
@@ -83,6 +84,18 @@ class ActivatorServiceProvider extends ServiceProvider
         foreach ($paths as $key => $path) {
             $this->mergeConfigFrom($path, $this->namespace.'::'.$key);
         }
+    }
+
+    /**
+     * Register migration files.
+     *
+     * @return void
+     */
+    protected function registerMigrations()
+    {
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations'),
+        ], 'activator-migrations');
     }
 
     /**
