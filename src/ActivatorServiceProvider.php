@@ -5,7 +5,7 @@ namespace Rorikurn\LaravelActivation;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 
-class LaravelActivationProvider extends ServiceProvider
+class ActivatorServiceProvider extends ServiceProvider
 {
     /**
      * @var string
@@ -39,7 +39,6 @@ class LaravelActivationProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', $this->namespace);
-        $this->loadTranslationsFrom(__DIR__.'/../../resources/lang/', $this->namespace);
     }
 
     /**
@@ -78,7 +77,7 @@ class LaravelActivationProvider extends ServiceProvider
     private function registerConfig()
     {
         $paths = [
-            'app' => __DIR__ . '/../../config/app.php',
+            'activator' => __DIR__ . '/../config/activator.php',
         ];
 
         foreach ($paths as $key => $path) {

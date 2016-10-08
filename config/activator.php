@@ -7,6 +7,9 @@ return [
     // User model
     'model'  => App\User::class,
 
+    // link activation
+    'activation_link' => 'auth/activation',
+
     // expiryTime
     'expiry_time'   => 60
 ];

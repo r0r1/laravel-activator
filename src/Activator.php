@@ -7,6 +7,8 @@ use Rorikurn\Activator\UserActivation;
 use Illuminate\Support\Facades\Config;
 use Carbon\Carbon;
 use Illuminate\Encryption\Encrypter;
+use Illuminate\Support\Facades\Mail;
+use Rorikurn\Activator\Mails\ActivationMail;
 
 class Activator
 {
@@ -30,9 +32,9 @@ class Activator
      * @param Model $user
      * @param Encrypter $crypt
      */
-    public function __construct(Model $user, Encrypter $crypt)
+    public function __construct(Encrypter $crypt)
     {
-        $this->user = $user;
+        $this->user = Config::get('activator::model');
         $this->crypt = $crypt;
     }
 
@@ -57,10 +59,10 @@ class Activator
 
         // send email activation
         if (Config::get('notification')) {
-            
-        } else {
-
+            // laravel notification feature
         }
+
+        return Mail::to($this->user)->send(new ActivationMail);
     }
 
     public function activation()
