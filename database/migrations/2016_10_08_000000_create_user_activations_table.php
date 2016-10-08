@@ -17,7 +17,8 @@ class CreateUserActivationsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('token');
-            $table->boolean('status');
+            $table->enum('status', ['need_activation', 'activated', 'resend'])
+                ->default('need_activation');
             $table->dateTime('expires_at')->nullable();
             $table->timestamps();
         });
