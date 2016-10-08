@@ -5,10 +5,11 @@ namespace Rorikurn\Activator;
 use Illuminate\Database\Eloquent\Model;
 use Rorikurn\Activator\UserActivation;
 use Illuminate\Support\Facades\Config;
-use Carbon\Carbon;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\Mail;
 use Rorikurn\Activator\Mails\ActivationMail;
+use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
 
 class Activator
 {
@@ -65,16 +66,6 @@ class Activator
         return Mail::to($this->user)->send(new ActivationMail);
     }
 
-    public function activation()
-    {
-
-    }
-
-    public function resendActivation()
-    {
-
-    }
-
     /**
      * Generate Token by User Id
      * @param  int $id
@@ -92,5 +83,24 @@ class Activator
     private function setExpiryTime($value)
     {
         return Carbon::now() * $value;
+    }
+
+    /**
+     * Get a Activator route registrar.
+     *
+     * @param  array  $options
+     * @return RouteRegistrar
+     */
+    public static function routes($callback = null, array $options = [])
+    {
+        $callback = $callback ?: function ($router) {
+            $router->all();
+        };
+        $options = array_merge($options, [
+            'namespace' => '\Rorikurn\Activator\Http\Controllers',
+        ]);
+        Route::group($options, function ($router) use ($callback) {
+            $callback(new RouteRegistrar($router));
+        });
     }
 }
