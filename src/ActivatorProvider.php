@@ -10,7 +10,7 @@ class LaravelActivationProvider extends ServiceProvider
     /**
      * @var string
      */
-    private $namespace = 'laravel-activator';
+    private $namespace = 'activator';
 
     /**
      * @var array
