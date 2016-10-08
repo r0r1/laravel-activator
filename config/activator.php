@@ -2,13 +2,13 @@
 
 return [
     // handle laravel notification via mail
-    'notification'  => true,
+    'notification'  => false,
 
     // User model
     'model'  => App\User::class,
 
-    // link activation
-    'activation_link' => 'auth/activation',
+    // redirect url after activation account successful
+    'redirect_url' => 'user',
 
     // expiryTime
     'expiry_time'   => 60
