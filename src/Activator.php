@@ -3,7 +3,7 @@
 namespace Rorikurn\Activator;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Encryption\Encrypter;
+use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Mail\Mailer as Mail;
 use Illuminate\Contracts\View\Factory as View;
 use Illuminate\Support\Facades\Route;
