@@ -14,8 +14,7 @@ use Carbon\Carbon;
 class Activator
 {
     /**
-     * Encryptor
-     * 
+     * Encrypter Instance
      * @var $encrypter
      */
     private $encrypter;
