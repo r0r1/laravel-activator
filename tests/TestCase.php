@@ -30,4 +30,9 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             $table->timestamps();
         });
     }
+
+    public function tearDown()
+    {
+        m::close();
+    }
 }

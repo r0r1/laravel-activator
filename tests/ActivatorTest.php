@@ -24,9 +24,4 @@ class ActivatorTest extends TestCase
         $activated = $activator->activate(1);
         $this->assertInternalType('boolean', $activated);
     }
-
-    public function tearDown()
-    {
-        m::close();
-    }
 }
