@@ -24,4 +24,26 @@ class ActivatorTest extends TestCase
         $activated = $activator->activate(1);
         $this->assertInternalType('boolean', $activated);
     }
+
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage Activate account failed.
+     */
+    public function test_activate_failure()
+    {
+        $encrypter = m::mock('Illuminate\Contracts\Encryption\Encrypter');
+        $config = m::mock('Illuminate\Contracts\Config\Repository');
+        $view = m::mock('Illuminate\Contracts\View\Factory');
+        $mail = m::mock('Illuminate\Contracts\Mail\Mailer');
+        $activator = new Activator($encrypter, $config, $view, $mail);
+
+        $config->shouldReceive('get')->andReturn(['expiry_time' => 60]);
+        $encrypter->shouldReceive('encrypt')->andReturn(null);
+        $view->shouldReceive('make')->andReturn(null);
+        $mail->shouldReceive('send')->andReturn(true);
+
+        $activated = $activator->activate(1);
+
+        throw new MyException('Activate account failed.');
+    }
 }

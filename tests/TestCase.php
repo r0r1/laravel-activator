@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Capsule\Manager as DB;
+use Mockery as m;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase
 {
