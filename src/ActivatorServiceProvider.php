@@ -77,13 +77,9 @@ class ActivatorServiceProvider extends ServiceProvider
      */
     private function registerConfig()
     {
-        $paths = [
-            'activator' => __DIR__ . '/../config/activator.php',
-        ];
+        $configPath = __DIR__ . '/../config/activator.php';
 
-        foreach ($paths as $key => $path) {
-            $this->mergeConfigFrom($path, $this->namespace.'::'.$key);
-        }
+        $this->mergeConfigFrom($configPath, 'activator');
     }
 
     /**

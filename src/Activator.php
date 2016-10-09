@@ -2,87 +2,112 @@
 
 namespace Rorikurn\Activator;
 
-use Illuminate\Database\Eloquent\Model;
-use Rorikurn\Activator\UserActivation;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Encryption\Encrypter;
-use Illuminate\Support\Facades\Mail;
-use Rorikurn\Activator\Mails\ActivationMail;
+use Illuminate\Contracts\Mail\Mailer as Mail;
+use Illuminate\Contracts\View\Factory as View;
 use Illuminate\Support\Facades\Route;
+use Rorikurn\Activator\UserActivation;
+use Rorikurn\Activator\Mails\ActivationMail;
 use Carbon\Carbon;
 
 class Activator
 {
     /**
-     * User Model
-     * 
-     * @var $user
-     */
-    private $user;
-
-    /**
      * Encryptor
      * 
-     * @var $crypt
+     * @var $encrypter
      */
-    private $crypt;
+    private $encrypter;
+
+    /**
+     * Config instance
+     * @var $config
+     */
+    private $config;
+
+    /**
+     * View Instance
+     * @var $view
+     */
+    private $view;
+
+    /**
+     * Mail Instance
+     * @var $mail
+     */
+    private $mail;
 
     /**
      * Activator Constructor
-     * 
-     * @param Model $user
-     * @param Encrypter $crypt
-     */
-    public function __construct(Encrypter $crypt)
-    {
-        $this->user = Config::get('activator::model');
-        $this->crypt = $crypt;
+     * @param Encrypter $encrypter 
+     * @param Config    $config
+     * @param View      $view      
+     * @param Mail      $mail      
+     */ 
+    public function __construct(
+        Encrypter $encrypter, 
+        Config $config,
+        View $view,
+        Mail $mail
+    ) {
+        $this->encrypter = $encrypter;
+        $this->config = $config;
+        $this->view = $view;
+        $this->mail = $mail;
     }
 
     /**
-     * Send Email Activation
-     * 
+     * Activation Process
+     * @param  int $userId
      * @return boolean
      */
-    public function activate()
+    public function activate(int $userId)
     {
-        $data = [
-            'user_id'       => $this->user->id,
-            'token'         => $this->generateToken($this->user->id),
-            'expires_at'    => $this->setExpiryTime(Config::get('activator::expiry_time'))
-        ];
+        $config = $this->config->get('activator');
+        $data = $this->generateData($userId, $config);
 
         try {
             UserActivation::create($data);
         } catch (\Exception $e) {
-            throw \Exception('Activate account failed.');
+            throw new \Exception('Activate account failed.');
         }
 
-        // send email activation
-        if (Config::get('notification')) {
-            // laravel notification feature
-        }
+        $user = $this->config->get('activator::model');
 
-        return Mail::to($this->user)->send(new ActivationMail);
+        return $this->sendMailActivation($user);
     }
 
     /**
-     * Generate Token by User Id
-     * @param  int $id
-     * @return Encrypter
+     * Generate Data Activation
+     * @param  int $userId 
+     * @param  array $config 
+     * @return array         
      */
-    private function generateToken($id)
+    private function generateData(int $userId, array $config)
     {
-        return $this->crypt->encrypt($id);
+        $expiryTime = $config['expiry_time'];
+        $data = [
+            'user_id'       => $userId,
+            'token'         => $this->encrypter->encrypt($userId),
+            'expires_at'    => Carbon::now()->addMinutes($expiryTime)
+        ];
+
+        return $data;
     }
 
     /**
-     * Set Expiry time of token
-     * @param int $value
+     * Send Mail Activation
+     * @param  Model $user 
+     * @return boolean       
      */
-    private function setExpiryTime($value)
+    private function sendMailActivation($user)
     {
-        return Carbon::now() * $value;
+        $mailTemplate = $this->view->make('activator::activation');
+        return $this->mail->send($mailTemplate, [$user], function ($mail) use($user) {
+            $mail->to($user->email)
+                ->subject('Activation Account');
+        });
     }
 
     /**
