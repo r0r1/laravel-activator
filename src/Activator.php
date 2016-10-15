@@ -6,7 +6,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Mail\Mailer as Mail;
 use Illuminate\Contracts\View\Factory as View;
-use Illuminate\Support\Facades\Route;
 use Rorikurn\Activator\UserActivation;
 use Carbon\Carbon;
 
@@ -105,25 +104,6 @@ class Activator
         return $this->mail->send($mailTemplate, [$user], function ($mail) use ($user) {
             $mail->to($user->email)
                 ->subject('Activation Account');
-        });
-    }
-
-    /**
-     * Get a Activator route registrar.
-     *
-     * @param  array  $options
-     * @return RouteRegistrar
-     */
-    public static function routes($callback = null, array $options = [])
-    {
-        $callback = $callback ?: function ($router) {
-            $router->all();
-        };
-        $options = array_merge($options, [
-            'namespace' => '\Rorikurn\Activator\Http\Controllers',
-        ]);
-        Route::group($options, function ($router) use ($callback) {
-            $callback(new RouteRegistrar($router));
         });
     }
 }
