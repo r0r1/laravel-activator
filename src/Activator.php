@@ -8,7 +8,6 @@ use Illuminate\Contracts\Mail\Mailer as Mail;
 use Illuminate\Contracts\View\Factory as View;
 use Illuminate\Support\Facades\Route;
 use Rorikurn\Activator\UserActivation;
-use Rorikurn\Activator\Mails\ActivationMail;
 use Carbon\Carbon;
 
 class Activator
@@ -103,7 +102,7 @@ class Activator
     private function sendMailActivation($user)
     {
         $mailTemplate = $this->view->make('activator::activation');
-        return $this->mail->send($mailTemplate, [$user], function ($mail) use($user) {
+        return $this->mail->send($mailTemplate, [$user], function ($mail) use ($user) {
             $mail->to($user->email)
                 ->subject('Activation Account');
         });
