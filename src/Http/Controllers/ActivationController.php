@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Rorikurn\Activator\UserActivation;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Contracts\View\Factory as View;
 
 class ActivationController
 {
@@ -21,14 +20,21 @@ class ActivationController
     protected $validation;
 
     /**
+     * View Instance
+     * @var $view
+     */
+    protected $view;
+
+    /**
      * Create a activation controller instance.
      *
      * @param  ValidationFactory  $validation
      * @return void
      */
-    public function __construct(ValidationFactory $validation)
+    public function __construct(ValidationFactory $validation, View $view)
     {
         $this->validation = $validation;
+        $this->view = $view;
     }
 
     /**
@@ -40,13 +46,17 @@ class ActivationController
     public function index(Request $request)
     {
         $this->validation->make($request->all(), [
-            'token' => 'required',
-        ])->validate();
+            'token' => 'required'
+        ]);
+
+        if ($this->validation->fails()) {
+            return $this->view->make('activator::activation');
+        }
 
         try {
-            $userActivated = UserActivation::needActivation()->first();
+            $userActivated = UserActivation::needActivation($request->get('token'))->first();
         } catch (\Exception $e) {
-            throw \Exception("token not found.", 1);
+            throw new \Exception("token not found.", 1);
         }
 
         $expiryTime = $this->getExpiryTime($userActivated);
