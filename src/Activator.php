@@ -57,7 +57,7 @@ class Activator
     /**
      * Activation Process
      * @param  int $userId
-     * @return boolean
+     * @return userActivated
      */
     public function activate(int $userId)
     {
@@ -65,14 +65,15 @@ class Activator
         $data = $this->generateData($userId, $config);
 
         try {
-            UserActivation::create($data);
+            $userActivated = UserActivation::create($data);
         } catch (\Exception $e) {
             throw new \Exception('Activate account failed.');
         }
 
         $user = $this->config->get('activator::model');
+        $this->sendMailActivation($user);
 
-        return $this->sendMailActivation($user);
+        return $userActivated;
     }
 
     /**

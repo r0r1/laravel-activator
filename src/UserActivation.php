@@ -16,7 +16,7 @@ class UserActivation extends Model
 
     public function user()
     {
-        return $this->belongsTo(Config::get('model'));
+        return $this->belongsTo(Config::get('activator::model'));
     }
 
     public function scopeNeedActivation($q, $token)

@@ -22,7 +22,8 @@ class ActivatorTest extends TestCase
         $view->shouldReceive('make')->andReturn(null);
         $mail->shouldReceive('send')->andReturn(true);
         $activated = $activator->activate(1);
-        $this->assertInternalType('boolean', $activated);
+        $this->assertInternalType('object', $activated);
+        $this->assertEquals(1, $activated->id);
     }
 
     /**
