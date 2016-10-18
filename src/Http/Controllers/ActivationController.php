@@ -4,21 +4,13 @@ namespace Rorikurn\Activator\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Rorikurn\Activator\UserActivation;
 use Illuminate\Contracts\View\Factory as View;
+use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class ActivationController
 {
-    /**
-     * The validation factory implementation.
-     *
-     * @var ValidationFactory
-     */
-    protected $validation;
-
     /**
      * View Instance
      * @var $view
@@ -28,12 +20,11 @@ class ActivationController
     /**
      * Create a activation controller instance.
      *
-     * @param  ValidationFactory  $validation
+     * @param  View  $view
      * @return void
      */
-    public function __construct(ValidationFactory $validation, View $view)
+    public function __construct(View $view)
     {
-        $this->validation = $validation;
         $this->view = $view;
     }
 
@@ -45,18 +36,12 @@ class ActivationController
      */
     public function index(Request $request)
     {
-        $this->validation->make($request->all(), [
-            'token' => 'required'
-        ]);
-
-        if ($this->validation->fails()) {
-            return $this->view->make('activator::activation');
-        }
-
         try {
             $userActivated = UserActivation::needActivation($request->get('token'))->first();
         } catch (\Exception $e) {
-            throw new \Exception("token not found.", 1);
+            return $this->view->make('activator::activation', [
+                'message' => 'token not found.'
+            ]);
         }
 
         $expiryTime = $this->getExpiryTime($userActivated);
