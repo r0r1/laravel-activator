@@ -76,7 +76,7 @@ class ActivationController
         $userActivated->status = 'activated';
         $userActivated->save();
 
-        $this->auth->loginUsingId($userActivated->user);
+        $this->auth->loginUsingId($userActivated->user_id);
 
         return $this->router->redirectTo($this->config->get('redirect_url'));
     }
