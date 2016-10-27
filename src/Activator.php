@@ -8,6 +8,7 @@ use Illuminate\Contracts\Mail\Mailer as Mail;
 use Illuminate\Contracts\View\Factory as View;
 use Rorikurn\Activator\UserActivation;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Route;
 
 class Activator
 {
@@ -105,6 +106,28 @@ class Activator
         return $this->mail->send($mailTemplate, [$user], function ($mail) use ($user) {
             $mail->to($user->email)
                 ->subject('Activation Account');
+        });
+    }
+
+    /**
+     * Get routes
+     * @param  array  $options 
+     * @return Illuminate\Support\Facades\Route          
+     */
+    public static function routes(array $options = [])
+    {
+        $options = array_merge($options, [
+            'namespace' => '\Rorikurn\Activator\Http\Controllers',
+        ]);
+
+        Route::group($options, function ($router) {
+            $router->get('/activation', ['uses' => 'ActivationController@index']);
+            $router->get('/resend-activation', [
+                'uses' => 'ResendActivationController@index'
+            ]);
+            $router->post('/resend-activation', [
+                'uses' => 'ResendActivationController@store'
+            ]);
         });
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rorikurn\LaravelActivation;
+namespace Rorikurn\Activator;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
