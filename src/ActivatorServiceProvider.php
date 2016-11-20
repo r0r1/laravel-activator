@@ -39,7 +39,15 @@ class ActivatorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', $this->namespace);
+        $this->loadViewsFrom(__DIR__.'/../resources/views', $this->namespace);
+
+        $this->publishes([
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/activator'),
+        ]);
+
+        $this->publishes([
+            __DIR__.'/../config/activator.php' => config_path('activator.php'),
+        ]);
     }
 
     /**

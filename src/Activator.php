@@ -60,10 +60,10 @@ class Activator
      * @param  int $userId
      * @return userActivated
      */
-    public function activate(int $userId)
+    public function activate($user)
     {
         $config = $this->config->get('activator');
-        $data = $this->generateData($userId, $config);
+        $data = $this->generateData($user->id, $config);
 
         try {
             $userActivated = UserActivation::create($data);
@@ -71,10 +71,7 @@ class Activator
             throw new \Exception('Activate account failed.');
         }
 
-        $user = $this->config->get('activator::model');
-        $this->sendMailActivation($user);
-
-        return $userActivated;
+        return $this->sendMailActivation($user);
     }
 
     /**
@@ -102,8 +99,7 @@ class Activator
      */
     private function sendMailActivation($user)
     {
-        $mailTemplate = $this->view->make('activator::activation');
-        return $this->mail->send($mailTemplate, [$user], function ($mail) use ($user) {
+        return $this->mail->send('activator::activation', ['user' => $user], function ($mail) use ($user) {
             $mail->to($user->email)
                 ->subject('Activation Account');
         });
