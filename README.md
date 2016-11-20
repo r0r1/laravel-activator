@@ -8,7 +8,7 @@ composer require rorikurniadi/laravel-activator
 
 ## Setup
 
-- Register in config/app.php
+### Register in config/app.php
 ``` php
     'providers' => [
         #...
@@ -21,12 +21,12 @@ composer require rorikurniadi/laravel-activator
     ]
 ```
 
-- Migration
+### Migration
 ``` bash
 php artisan migrate --path="vendor/rorikurniadi/laravel-activator/database/migrations"
 ```
 
-- Publish Views & Config File
+### Publish Views & Config File
 ``` bash
 php artisan vendor:publish --force
 ```
