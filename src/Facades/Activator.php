@@ -13,6 +13,6 @@ class Activator extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Rorikurn\Activator\Activator';
+        return 'activator';
     }
 }

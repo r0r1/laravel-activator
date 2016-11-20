@@ -32,6 +32,7 @@ class ActivatorServiceProvider extends ServiceProvider
         $this->registerAliases();
         $this->registerConfig();
         $this->registerMigrations();
+        $this->registerApp();
     }
 
     /**
@@ -48,6 +49,18 @@ class ActivatorServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/activator.php' => config_path('activator.php'),
         ]);
+    }
+
+    /**
+     * Register App
+     * @return Activator
+     */
+    private function registerApp()
+    {
+        $this->app->bind('activator', function()
+        {
+            return app(\Rorikurn\Activator\Activator::class);
+        });
     }
 
     /**
